@@ -13,9 +13,10 @@ add_project_link_arguments('-specs=ds_arm9.specs', language: 'c')
 
 # libnds
 libnds = meson.get_compiler('c').find_library('nds9', dirs: '/opt/devkitpro/libnds/lib', static: true, required: true)
+math = meson.get_compiler('c').find_library('m')
 
 # create elf
-elf = executable('mtest.elf', 'test.c', include_directories: '/opt/devkitpro/libnds/include', dependencies: libnds)
+elf = executable('mtest.elf', ['test.c', 'vector3.c', 'ray.c'], include_directories: '/opt/devkitpro/libnds/include', dependencies: [libnds, math])
 
 # create .nds file
 ndstool = find_program('ndstool')

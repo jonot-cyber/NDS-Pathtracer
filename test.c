@@ -1,7 +1,19 @@
 #include <nds.h>
 
+#include "ray.h"
+
 #define COLOR(r, g, b) ((r) | (g)<<5 | (b)<<10)
 #define OFFSET(r, c, w) ((r)*(w)+(c))
+
+struct Vector3 {
+	float x;
+	float y;
+	float z;
+};
+
+void set_pixel(int row, int col, u16 color) {
+	VRAM_A[OFFSET(row, col, SCREEN_WIDTH)] = color;
+}
 
 int main() {
 	REG_DISPCNT = MODE_FB0;
@@ -11,14 +23,9 @@ int main() {
 		swiWaitForVBlank();
 		for (int y = 0; y < SCREEN_HEIGHT; y++) {
 			for (int x = 0; x < SCREEN_WIDTH; x++) {
-				int r = 31 * x / SCREEN_WIDTH;
-				int g = 31 * y / SCREEN_HEIGHT;
-				set_pixel(y, x, COLOR(r, g, 0));
+				struct ray d = ray_for_pixel(y, x, 70);
+				set_pixel(y, x, v3_to_color(d.dir));
 			}
 		}
 	}
-}
-
-void set_pixel(int row, int col, u16 color) {
-	VRAM_A[OFFSET(row, col, SCREEN_WIDTH)] = color;
 }
