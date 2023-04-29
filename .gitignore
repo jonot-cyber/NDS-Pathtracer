@@ -1,2 +1,5 @@
 # don't include build
 build/
+
+# for clangd
+.cache
