@@ -1,4 +1,4 @@
-project('mtest', 'c')
+project('pathtracer', 'c')
 
 # C flags
 add_project_arguments('-DARM9', language: 'c')
@@ -16,12 +16,13 @@ libnds = meson.get_compiler('c').find_library('nds9', dirs: '/opt/devkitpro/libn
 math = meson.get_compiler('c').find_library('m')
 
 # create elf
-elf = executable('mtest.elf', ['test.c', 'vector3.c', 'ray.c'], include_directories: '/opt/devkitpro/libnds/include', dependencies: [libnds, math])
+elf = executable('pathtracer.elf', ['main.c', 'vector3.c', 'ray.c', 'sphere.c'], include_directories: '/opt/devkitpro/libnds/include', dependencies: [libnds, math])
 
 # create .nds file
 ndstool = find_program('ndstool')
 
-out = custom_target('mtest.nds', command: [ndstool, '-c', '@OUTPUT@', '-9', '@INPUT@', '-b', '/opt/devkitpro/libnds/icon.bmp', '"1;2;3"'], input: elf, output: 'mtest.nds', build_by_default: true)
+game_title = 'Jonot\'s NDS Pathtracer'
+out = custom_target(meson.project_name()+'.nds', command: [ndstool, '-c', '@OUTPUT@', '-9', '@INPUT@', '-b', '@SOURCE_ROOT@/icon.bmp', '"' + game_title + '"'], input: elf, output: meson.project_name()+'.nds', build_by_default: true, depend_files: './icon.bmp')
 
 # run with tool :)
 flatpak = find_program('flatpak')

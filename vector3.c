@@ -13,8 +13,12 @@ struct v3 normalize(struct v3 in) {
 }
 
 u16 v3_to_color(struct v3 in) {
-	int r = 15 * (in.x + 1);
-	int g = 15 * (in.y + 1);
-	int b = 0;
+	int r = 31 * in.x;
+	int g = 31 * in.y;
+	int b = 31 * in.z;
 	return COLOR(r, g, b);
+}
+
+float dot(struct v3 a, struct v3 b) {
+	return a.x*b.x + a.y*b.y + a.z*b.z;
 }
